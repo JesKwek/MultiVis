@@ -47,10 +47,10 @@ git clone https://github.com/JesKwek/SPRITEVisu.git
 
 ### Step 2: Install Frontend Dependencies
 
-Navigate to the frontend directory `SPRITEVisu` and install the required Node.js packages: 
+Navigate to the frontend directory `SPRITEVisu-frontend` and install the required Node.js packages: 
 
 ```bash
-cd SPRITEVisu
+cd SPRITEVisu-frontend
 npm install
 ```
 
