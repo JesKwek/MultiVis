@@ -1,7 +1,32 @@
+<h1 align="center">
+  <a href="https://github.com/JesKwek/SPRITEVisu/tree/main">
+    <img src="SPRITEVisu/src/app/favicon.ico" alt="Logo" width="25" height="25">
+    <b>SPRITEVisu</b>
+  </a>
+  
+</h1>
+
+<div align="center">
+  Coming Soon
+  <br />
+  <br />
+  <a href="https://github.com/JesKwek/SPRITEVisu/issues">Report a Bug</a>
+  ·
+  <a href="https://github.com/JesKwek/SPRITEVisu/issues">Request a Feature</a>
+  .
+  <a href="https://github.com/JesKwek/SPRITEVisu/issues">Ask a Question</a>
+</div>
+
+<br />
+
 ## SPRITEVisu Installation Guide
+<details>
+  <summary><strong>Method 1: Scripted Installation (Quick and Easy)</strong></summary>
+</details>
+  
 
 <details>
-  <summary><strong>Click here for detailed of Manual Installation Guide</strong></summary>
+  <summary><strong>Method 2: Manual Installation</strong></summary>
 
 This guide provides step-by-step instructions for manually setting up the SPRITEVisu web software on your local machine.
 
