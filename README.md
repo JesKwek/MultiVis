@@ -46,7 +46,7 @@ Before you start any installation, ensure that you have Node.js and Python. To i
 - **MacBook:** Run [install.command](./install.command)
 - **Windows:** Run [install.bat](./install.bat)
 - **Linux:** Run [install.sh](./install.sh)
-- 
+
 Make sure to execute the appropriate script for your platform to ensure all dependencies are installed correctly.
 
 ### Step 3: Start the Server
