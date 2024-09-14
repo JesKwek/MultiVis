@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://github.com/JesKwek/SPRITEVisu/tree/main">
-    <img src="SPRITEVisu/src/app/favicon.ico" alt="Logo" width="25" height="25">
+    <img src="SPRITEVisu-frontend/src/app/favicon.ico" alt="Logo" width="25" height="25">
     <b>SPRITEVisu</b>
   </a>
   
@@ -22,8 +22,50 @@
 ## SPRITEVisu Installation Guide
 <details>
   <summary><strong>Method 1: Scripted Installation (Quick and Easy)</strong></summary>
+
+This guide provides step-by-step instructions for setting up the SPRITEVisu web software on your local machine.
+
+### Prerequisites
+
+Before you start, ensure that you have the following installed:
+
+- **Node.js** (version 14 or higher) - [Download Node.js](https://nodejs.org/)
+- **Python** (version 3.8 or higher) - [Download Python](https://www.python.org/downloads/)
+
+### Step 1: Clone or download the Repository
+
+First, clone the SPRITEVisu repository to your local machine or download it via here [SPRITEVisu.zip](https://github.com/JesKwek/SPRITEVisu/archive/refs/heads/main.zip):
+
+```bash
+git clone https://github.com/JesKwek/SPRITEVisu.git
+```
+
+### Step 2: Install Dependencies
+Before you start any installation, ensure that you have Node.js and Python. To install the necessary dependencies, follow the steps based on your operating system:
+
+- **MacBook:** Run [install.command](./install.command)
+- **Windows:** Run [install.bat](./install.bat)
+- **Linux:** Run [install.sh](./install.sh)
+- 
+Make sure to execute the appropriate script for your platform to ensure all dependencies are installed correctly.
+
+### Step 3: Start the Server
+To start the server, use the appropriate command for your operating system:
+
+- **MacBook:** Run [start.command](./start.command)
+- **Windows:** Run [start.bat](./start.bat)
+- **Linux:** Run [start.sh](./start.sh)
+
+Ensure you execute the correct script for your platform to launch the server successfully.
+
+### Step 4: Go to this address
+
+```
+http://localhost:3000
+```
+
 </details>
-  
+
 
 <details>
   <summary><strong>Method 2: Manual Installation</strong></summary>
@@ -39,7 +81,7 @@ Before you start, ensure that you have the following installed:
 
 ### Step 1: Clone the Repository
 
-First, clone the SPRITEVisu repository to your local machine:
+First, clone the SPRITEVisu repository to your local machine or download it via here [SPRITEVisu.zip](https://github.com/JesKwek/SPRITEVisu/archive/refs/heads/main.zip):
 
 ```bash
 git clone https://github.com/JesKwek/SPRITEVisu.git
@@ -59,7 +101,7 @@ npm install
 Next, navigate to the backend directory `SPRITEVisu-server` and install the required Python packages:
 
 ```
-cd ../SPRITEVisu-server
+cd ..
 pip install -r requirements.txt
 ```
 ### Step 4: Start the Frontend Server
@@ -67,7 +109,7 @@ pip install -r requirements.txt
 Go back to the frontend directory and start the Next.js development server:
 
 ```
-cd ../SPRITEVisu
+cd ../SPRITEVisu-server
 npm run dev
 ```
 
