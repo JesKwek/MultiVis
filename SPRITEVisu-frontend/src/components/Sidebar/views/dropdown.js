@@ -36,7 +36,7 @@ const CustomDropdown = (isHeatmap) => {
                     <p className={style.subtitle}>{isHeatmap ? "Pairwise analysis" : "Multiplexed analysis" }</p>
                 </div>
             </div>
-            <div>
+            {/* <div>
                 {!isMenu &&
                     <Image
                         src="/down-arrow.png" // Path to your image
@@ -52,7 +52,7 @@ const CustomDropdown = (isHeatmap) => {
                         width={12} // Fixed width
                         height={12} // Fixed height
                     />}
-            </div>
+            </div> */}
         </div>
     );
 

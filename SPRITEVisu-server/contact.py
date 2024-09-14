@@ -1,10 +1,38 @@
+"""
+Author: Jes Kwek Hui Min
+Description: A class for making heatmaps from chromosomal conformation data, 
+adapted from the SPRITE pipeline developed by the Guttman Lab.
+URL: https://github.com/GuttmanLab/sprite-pipeline/blob/master/scripts/python/contact.py
+"""
+
 import numpy as np
 import subprocess
 import os
+import platform
+
+__author__ = "Jes Kwek Hui Min"
 
 class Contacts:
+    """
+    A class for generating heatmaps from chromosomal conformation data, adapted from the Guttman Lab's SPRITE pipeline.
+
+    This class includes methods for handling various SPRITE data formats to create intra- and inter-chromosomal
+    contact matrices. Some functions in this class are based on or directly adapted from the original SPRITE pipeline
+    code available at: https://github.com/GuttmanLab/sprite-pipeline/blob/master/scripts/python/contact.py.
+    """
+
 
     def __init__(self, chromosome_size_x, chromosome_size_y, resolution, downweighting):
+        """
+        Initializes a Contacts object.
+
+        Args:
+            chromosome_size_x (int): Size of the first chromosome.
+            chromosome_size_y (int): Size of the second chromosome.
+            resolution (int): Resolution of the contact matrix.
+            downweighting (str): Type of down-weighting to apply ('none', 'n_minus_one', or other).
+        """
+
         self._min_matrix_value = 0.0
         self._max_matrix_value = 0.0
         self._downweighting = downweighting
@@ -14,21 +42,30 @@ class Contacts:
         self._matrix = self.init_genome_matrix()
 
     def init_genome_matrix(self):
-        """Initializes an internal heatmap matrix with a number of rows
-        determined by this object's assembly and resolution (e.g., mm9 at
-        100 Mb resolution.
+        """
+        Initializes an internal heatmap matrix with dimensions based on chromosome sizes and resolution.
 
         This method is used for genome-wide interchromosomal heatmaps only.
-        """
 
+        Returns:
+            np.ndarray: Initialized matrix filled with zeros.
+        """
         num_bins_x = -(-self._chromosome_size_x // self._resolution )
         num_bins_y = -(-self._chromosome_size_y // self._resolution )
         contacts = np.zeros((num_bins_x, num_bins_y))
-        print(contacts.shape)
+        # print(contacts.shape)
         return contacts
     
     def get_inc(self, inc):
-        """Get all the pairwise interaction calculation value"""
+        """
+        Get the pairwise interaction calculation value based on the down-weighting setting.
+
+        Args:
+            inc (int): Increment value used in the calculation.
+
+        Returns:
+            float: Calculated weight based on the increment value and down-weighting setting.
+        """
         if self._downweighting == "none":
             return 1.0
         elif self._downweighting == "n_minus_one":
@@ -37,6 +74,12 @@ class Contacts:
             return 2.0 / float(inc)
         
     def find_max_min_value(self, current):
+        """
+        Updates the maximum and minimum matrix values based on the current value.
+
+        Args:
+            current (float): Current matrix value to compare.
+        """
         if current > self._max_matrix_value:
             self._max_matrix_value = current
 
@@ -45,7 +88,14 @@ class Contacts:
 
     
     def add_bins_to_contacts(self, inc, start, end):
-        """Stores all pairwise contacts implied by one SPRITE cluster."""
+        """
+        Stores all pairwise contacts implied by one SPRITE cluster.
+
+        Args:
+            inc (int): Increment value.
+            start (int): Start position of the contact.
+            end (int): End position of the contact.
+        """
         inc_downweighted = self.get_inc(inc)
 
         read_bin_start = int(start) // self._resolution
@@ -69,27 +119,24 @@ class Contacts:
         return self._max_matrix_value
     
     def raw_contacts(self, file_content):
+        """
+        Processes raw contact data to populate the contact matrix.
+
+        Args:
+            file_content (list): List of strings, each representing a line of contact data.
+        """
         for line in file_content:
             start1, start2, total_inc, specific_inc = line.split(',')
             self.add_bins_to_contacts(specific_inc, start1, start2)
     
 
     def ice_raw_contacts(self, iterations):
-        """Calls Hi-Corrector to apply IC normalization to the internal heatmap
-        matrix.
-
-        This method generates a file of biases by calling the ic executable,
-        then scales each cell of the internal heatmap matrix by the two
-        appropriate factors in that file.
- 
-        Args:
-            raw_contacts_file (str): The file containing a raw contacts heatmap.
-            bias_file (str): The path to write the Hi-Corrector output to.
-            iterations (int): The number of Hi-Corrector iterations to perform.
-            hicorrector_path (str): The path to the Hi-Corrector ic program.
         """
+        Applies ICE normalization to the internal heatmap matrix.
 
-        # TODO: should allow user to choose iteration
+        Args:
+            iterations (int): The number of Hi-Corrector iterations to perform.
+        """
         biases = self.calculate_bias_factors(iterations)
         self._min_matrix_value = 0.0
         self._max_matrix_value = 0.0
@@ -104,21 +151,14 @@ class Contacts:
     
     def calculate_bias_factors(self, 
                                iterations):
-        """Runs Hi-Corrector on the raw contacts heatmap.
-
-        The bias file that Hi-Corrector outputs is subsequently read and
-        returned as a list of floats.
-
-        Note:
-            Hi-Corrector cannot access the internal numpy matrix of this
-            object. The matrix needs to be written to disk first, then read by
-            Hi-Corrector.
+        """
+        Runs Hi-Corrector to compute bias factors for the raw contacts heatmap.
 
         Args:
-            raw_contacts_file (str): The file containing a raw contacts heatmap.
-            bias_file (str): The path to write the Hi-Corrector output to.
             iterations (int): The number of Hi-Corrector iterations to perform.
-            hicorrector_path (str): The path to the Hi-Corrector ic program.
+
+        Returns:
+            list: Bias factors for each row/column of the matrix.
         """
 
         skip_first_row = "0"    # 0 == don't skip
@@ -126,7 +166,7 @@ class Contacts:
         num_lines = self._matrix.shape[0]
 
         bias_file = '../spirte-box/public/matrix_bias.txt'
-        hicorrector = './HiCorrector_1.2/bin-macOS/ic'
+        hicorrector = self.get_hicorrector_path()
 
         with open(os.devnull, 'w') as devnull:
             subprocess.check_call([
@@ -143,8 +183,14 @@ class Contacts:
         return self.parse_bias_file(bias_file)
     
     def parse_bias_file(self, bias_file):
-        """Parses a Hi-Corrector ic output file and returns the values as a
-        list of floats.
+        """
+        Parses a Hi-Corrector output file and returns the bias values as a list of floats.
+
+        Args:
+            bias_file (str): Path to the Hi-Corrector output file.
+
+        Returns:
+            list: List of bias factors.
         """
 
         biases = []
@@ -155,13 +201,9 @@ class Contacts:
         return biases
 
     def truncate_to_median_diagonal_value(self):
-        """Scales all values in the internal heatmap matrix relative to the
-        median value of the +1 and the -1 diagonals (offset from main diagonal
-        by +/- 1).
-
-        If the median value is 10, a value of 3 will be scaled to 0.3 and a
-        value of 9 will be scaled to 0.9. A value of 11 would be set to 1
-        (since 11 > 10) rather than being set to 1.1.
+        """
+        Scales all values in the internal heatmap matrix relative to the
+        median value of the +1 and the -1 diagonals.
         """
 
         median_diagonal_value = self.get_median_diagonal_value()
@@ -183,15 +225,15 @@ class Contacts:
             self._matrix[i][i] = 0
 
     def tranform_matrix(self):
+        """Transposes the internal heatmap matrix."""
         self._matrix = np.transpose(self._matrix)
     
     def get_median_diagonal_value(self):
-        """Returns the median diagonal value of this object's internal heatmap
-        matrix."
+        """
+        Returns the median diagonal value of the internal heatmap matrix.
 
-        Note:
-            The median diagonal value is actually the median of the two
-            diagonals offset by +1 and -1.
+        Returns:
+            float: Median value of diagonals offset by +1 and -1 from the main diagonal.
         """
 
         diagonal_values = []
@@ -203,7 +245,28 @@ class Contacts:
         return np.median(diagonal_values)
 
     def save_matrix(self):
+        """Saves the current matrix to a text file."""
         output_folder = '../spirte-box/public'
         os.makedirs(output_folder, exist_ok=True)
         file_path = os.path.join(output_folder, 'matrix.txt')
         np.savetxt(file_path, self._matrix, delimiter='\t', fmt='%1f')
+
+    def get_hicorrector_path(self):
+        """
+        Determines the path to the Hi-Corrector executable based on the operating system.
+
+        Returns:
+            str: Path to the Hi-Corrector executable.
+        """
+        current_os = platform.system()
+
+        if current_os == "Darwin":  # macOS
+            hicorrector = './HiCorrector_1.2/bin-macOS/ic'
+        elif current_os == "Windows":
+            hicorrector = './HiCorrector_1.2/bin-Windows/ic'
+        elif current_os == "Linux":
+            hicorrector = './HiCorrector_1.2/bin-Linux/ic'
+        else:
+            hicorrector = None  # Handle unknown OS case
+
+        return hicorrector

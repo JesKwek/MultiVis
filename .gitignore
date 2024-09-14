@@ -1,17 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-spirte-box/node_modules
-spirte-box/.pnp
+SPRITEVisu-frontend/node_modules
+SPRITEVisu-server/.pnp
 .pnp.js
 .yarn/install-state.gz
 
 # testing
-spirte-box/coverage
+SPRITEVisu-frontend/coverage
 
 # next.js
-spirte-box/.next/
-spirte-box/out/
+SPRITEVisu-frontend/.next/
+SPRITEVisu-frontend/out/
 
 # production
 /build

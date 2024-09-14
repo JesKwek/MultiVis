@@ -125,8 +125,13 @@
 
 .description {
     font-size: 10px;
-    margin: 4px 0 16px 0;
+    margin: 4px 0 0px 0;
     color: rgb(85, 85, 85);
     font-weight: lighter;
+}
+
+.spaces {
+    height: 80px;
+    width: 100%;
 }
 

@@ -65,7 +65,7 @@ const Heatmap = ({
             setCurrYMin(yMin)
         }
 
-        const maxRangeDifference = 2000 / 9;
+        const maxRangeDifference = initialRangePoints / 9;
 
         // Ensure the zoom is always square
         const xRangeDifference = xMax - xMin;

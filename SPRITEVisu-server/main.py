@@ -1,3 +1,9 @@
+"""
+Author: Jes Kwek Hui Min
+Description: Flask API for processing SPRITE contact matrix data. The API provides endpoints for processing 
+SPRITE data files, generating matrices, and handling metadata. It supports raw, ICE normalization, Final output types.
+"""
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
@@ -7,13 +13,36 @@ app = Flask(__name__)
 CORS(app)
 
 def get_chromosome_number(chromosome):
+    """
+    Convert chromosome identifier to a number for comparison.
+    
+    Parameters:
+    chromosome (str): Chromosome identifier (e.g., 'chr1', 'chrX').
+
+    Returns:
+    int: Numeric representation of the chromosome.
+    """
     return int(chromosome.replace('chr', ''))
 
 CHROMOSOMES_SIZE = {}
 
 @app.route('/matrix', methods=['POST'])
 def get_hic_data():
-    # Request data. These are the information taht is required to given by the FE.
+    """
+    Endpoint to process SPRITE data and generate a contact matrix.
+    
+    Request data:
+    - meta: JSON file containing chromosome sizes.
+    - chr: File containing Hi-C raw contact data.
+    - xAxis, yAxis: Chromosomes to be analyzed.
+    - resolution: Desired resolution for the contact matrix.
+    - output-type: Type of output (e.g., 'raw', 'iced').
+    - ice-iteration: Number of iterations for ICE normalization.
+    - down-weighting: Down-weighting factor for normalization.
+
+    Returns:
+    JSON response with min and max values of the matrix, and success status.
+    """
     metafile = request.files.getlist('meta')[0]
     file_content = metafile.read()
     CHROMOSOMES_SIZE = json.loads(file_content)
@@ -27,8 +56,7 @@ def get_hic_data():
 
     file_content = chrfile.read().decode('utf-8').splitlines()
 
-    # Get filename. If the data, is chr6 and chr 4, the file name will be chr4-chr6 and the
-    # out result data have to be transformed.
+    # Determine if the matrix transformation is required based on chromosome comparison
     isTransformRequired = False
 
     if (get_chromosome_number(xAxis) > get_chromosome_number(yAxis)):
@@ -37,7 +65,7 @@ def get_hic_data():
         xAxis = yAxis
         yAxis = temp
 
-    # Contact
+    # Retrieve sizes of the specified chromosomes
     x_size = CHROMOSOMES_SIZE['chromosomes'][xAxis]
     y_size = CHROMOSOMES_SIZE['chromosomes'][yAxis]
 
@@ -87,6 +115,15 @@ def get_hic_data():
     
 @app.route('/meta', methods=['POST'])
 def upload_files():
+    """
+    Endpoint to upload and parse a JSON file containing metadata.
+
+    Request data:
+    - files: JSON file containing metadata.
+
+    Returns:
+    JSON response containing the parsed data or an error message.
+    """
     file = request.files.getlist('files')[0]
 
     try:
@@ -99,4 +136,4 @@ def upload_files():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5500)

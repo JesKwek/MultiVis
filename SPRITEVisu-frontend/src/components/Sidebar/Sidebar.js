@@ -35,6 +35,7 @@ const Sidebar = ({
     const [heatmapVMax, setHeatmapVMax] = useState(1);
     const [axisUnit, setAxisUnit] = useState("Mb");
     const [axisValuePerUnit, setAxisValuePerUnit] = useState("1");
+    const [gridSize, setGridSize] = useState('222');
 
     const handleDirectorySelection = (event) => {
         const files = event.target.files;
@@ -75,7 +76,7 @@ const Sidebar = ({
         formData.append('files', file, file.webkitRelativePath);
 
         try {
-            const response = await fetch('http://0.0.0.0:5000/meta', {
+            const response = await fetch('http://0.0.0.0:5500/meta', {
                 method: 'POST',
                 body: formData
             });
@@ -99,6 +100,7 @@ const Sidebar = ({
         localStorage.setItem("pointsPerUnit", bp);
         localStorage.setItem("axisUnit", axisUnit);
         localStorage.setItem("bpPerAxis", axisValuePerUnit);
+        localStorage.setItem("gridSize", gridSize);
 
         // Find out file name
         const xAxisLower = xAxis.toLowerCase();
@@ -126,7 +128,7 @@ const Sidebar = ({
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://0.0.0.0:5000/matrix', {
+            const response = await fetch('http://0.0.0.0:5500/matrix', {
                 method: 'POST',
                 body: formData
             });
@@ -612,7 +614,49 @@ const Sidebar = ({
                     <p className={style.description}>Set the distance between ticks on the axis to customize the data intervals displayed e.g., 0 Mb, 5 Mb, 10 Mb.</p>
 
                     </div>
+
+                    <p className={style.subtitle}>Others</p>
+                    <div>
+                        <TextField
+                            className={style.textfieldStyle}
+                            fullWidth
+                            id="filled-basic"
+                            label="Grid Size"
+                            variant="filled"
+                            type="number"
+                            value={gridSize}
+                            onChange={(e) => setGridSize(e.target.value)}
+                            sx={{
+                                '& .MuiFilledInput-root': {
+                                    backgroundColor: 'rgb(246, 248, 249)',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    border: '1px solid rgb(227, 231, 233)',
+                                    height: '50px',
+                                    '&:before, &:after': {
+                                        borderBottom: 'none',
+                                    },
+                                    '&:hover:not(.Mui-disabled):before': {
+                                        borderBottom: 'none',
+                                    },
+                                },
+                                '& .MuiInputLabel-root': {
+                                    fontSize: '12px',
+                                },
+                            }}
+                            InputProps={{
+                                inputProps: {
+                                    min: 1
+                                },
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </div>
                 </div>
+
+                <div className={style.spaces}></div>
             </div>
 
             <div className={style.applyDiv}>

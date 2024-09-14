@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { dnaConversion } from "@/Methods/DnaConversion";
 import LoadingModal from "@/components/LoadingModal/LoadingModal";
 import { convertToBases, isWholeNumberWithNoDecimal } from "./Resources/Unit";
+import RightSidebar from "@/components/RightSidebar/RightSidebar";
 
 const Home = () => {
     // Setting Parameters:
@@ -29,14 +30,15 @@ const Home = () => {
 
 
     // For data extracting and initial zoom.
-    const initialRangePoints = 2000; // Initial range in points and the range of data to be subsetted.
-    const initialZoom = initialRangePoints / 9;
+    //// Initial range in points and the range of data to be subsetted.
+    const [initialRangePoints, setInitialRangePoints] = useState(1998);
+    const [initialZoom, setInitialZoom] = useState(initialRangePoints / 9);
 
     // Virutal is the subset of the actutal data and not the whole data
     const [virutalXMin, setVirutalXMin] = useState(0);
-    const [virutalXMax, setVirutalXMax] = useState(2000);
+    const [virutalXMax, setVirutalXMax] = useState(initialRangePoints);
     const [virutalYMin, setVirutalYMin] = useState(0);
-    const [virutalYMax, setVirutalYMax] = useState(2000);
+    const [virutalYMax, setVirutalYMax] = useState(initialRangePoints);
 
     var [xSliderStyle, setXSliderStyle] = useState({
         left: "0%",
@@ -50,11 +52,56 @@ const Home = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    /**
+    * Resets the heatmap layout and chromosome sliders to the default position (0,0) 
+    * and initial zoom level. Adjusts the x and y sliders back to 0% and updates 
+    * the layout properties accordingly.
+    */
+    const reset = (initialZoom) => {
+        console.log(`RESET ${initialZoom}`);
+        setXSliderStyle({
+            left: '0%',
+            width: `${(initialZoom/xLength)*100}%`
+        });
+
+        setYSliderStyle({
+            top: '0%',
+            height: `${(initialZoom/yLength)*100}%`
+        });
+
+        setLayout({
+            autosize: true,
+            dragmode: 'pan',
+            margin: {
+                l: 120,
+                r: 0,
+                t: 120,
+            },
+            xaxis: {
+                range: [0, initialZoom],
+                tickvals: xTicks.tickVals,
+                ticktext: xTicks.tickTexts,
+                side: 'top',
+                tickangle: 0
+            },
+            yaxis: {
+                range: [initialZoom, 0],
+                tickvals: yTicks.tickVals,
+                ticktext: yTicks.tickTexts,
+                side: 'left',
+                tickangle: 0
+            },
+        })
+    };
+
     const onApply = (resolutionInBp, resolutionUnit, result) => {
-        console.log(`Resolution (bp): ${resolutionInBp}`);
-        console.log(`Heatmap point unit: ${resolutionUnit}, ${convertToBases(resolutionUnit)}`);
         setActualMinDataValue(result['min_value']);
         setActualMaxDataValue(result['max_value']);
+        setInitialZoom(+localStorage.getItem("gridSize"));
+        setVirutalXMax(+localStorage.getItem("gridSize") * 9);
+        setVirutalYMax(+localStorage.getItem("gridSize") * 9);
+        setInitialRangePoints(+localStorage.getItem("gridSize") * 9);
+        reset(+localStorage.getItem("gridSize"));
 
         loadFile('Mb');
     }
@@ -62,41 +109,40 @@ const Home = () => {
     const loadFile = (resolutionUnit) => {
         const fetchFile = async () => {
             setIsLoading(true);
-
+    
             try {
                 const response = await fetch("matrix.txt");
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const blob = await response.blob();
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                    const text = reader.result;
-                    processFileContent(text);
-                };
-
-                reader.onerror = (error) => {
-                    console.error("Error reading file:", error);
-                };
-
-                reader.readAsText(blob);
+    
+                processFileBlob(blob); // Process directly from the blob
             } catch (error) {
                 console.error('Error fetching file:', error);
             }
-
+    
             setIsLoading(false);
         };
-
-        const processFileContent = (text) => {
+    
+        const processFileBlob = (blob) => {
             const chunkSize = 1024 * 1024; // 1 MB chunks
             let offset = 0;
             let completeData = [];
             let leftover = ''; // To store incomplete lines between chunks
-
+            const reader = new FileReader();
+    
+            reader.onload = (event) => {
+                const chunk = event.target.result;
+                processChunk(chunk);
+            };
+    
+            reader.onerror = (error) => {
+                console.error("Error reading file:", error);
+            };
+    
             const readNextChunk = () => {
-                if (offset >= text.length) {
-                    // All chunks are read
+                if (offset >= blob.size) {
                     if (leftover) {
                         // Process any remaining data in leftover
                         const rows = leftover.trim().split('\n');
@@ -106,22 +152,24 @@ const Home = () => {
                     finalizeDataProcessing();
                     return;
                 }
-                const end = Math.min(offset + chunkSize, text.length);
-                const chunk = text.slice(offset, end);
-                processChunk(chunk);
-                offset = end; // Update offset correctly to avoid infinite loop
-                setTimeout(readNextChunk, 0); // Yield to the event loop to avoid blocking
+    
+                const slice = blob.slice(offset, offset + chunkSize);
+                reader.readAsText(slice);
+                offset += chunkSize;
             };
-
+    
             const processChunk = (chunk) => {
-                const chunkText = leftover + chunk; // Prepend leftover from previous chunk
+                const chunkText = leftover + chunk; // Prepend leftover from the previous chunk
                 const rows = chunkText.split('\n');
                 leftover = rows.pop(); // Store the last incomplete line to prepend to the next chunk
-
+    
                 const chunkData = rows.map(row => row.split('\t').map(Number));
                 completeData = completeData.concat(chunkData);
+    
+                // Schedule the next chunk read
+                setTimeout(readNextChunk, 0); // Use setTimeout to avoid blocking the event loop
             };
-
+    
             const finalizeDataProcessing = () => {
                 if (completeData.length > 0) {
                     setHeatmapData(completeData);
@@ -129,27 +177,31 @@ const Home = () => {
                     setyLength(completeData.length);
                     updatePlotData(resolutionUnit, completeData, 0, initialRangePoints, 0, initialRangePoints);
                     setupHeatmapLayout(resolutionUnit);
-
+    
                     setXSliderStyle({
                         left: '0%',
-                        width: `${(initialZoom/(completeData[0]?.length || 0))*100}%`
-                    })
-            
+                        width: `${(initialZoom / (completeData[0]?.length || 0)) * 100}%`
+                    });
+    
                     setYSliderStyle({
                         top: '0%',
-                        height: `${(initialZoom/(completeData.length))*100}%`
-                    })
+                        height: `${(initialZoom / completeData.length) * 100}%`
+                    });
                 } else {
-                    // TODO: - Handle the error.
+                    // Handle the error.
                     console.error("Complete data is empty after processing.");
                 }
             };
-
+    
+            // Start reading the first chunk
             readNextChunk();
         };
-
+    
         fetchFile();
     };
+    
+    
+    
 
 
     const updatePlotData = (resolutionUnit, data, xMin, xMax, yMin, yMax, isMovingRight, isMovingDown) => {
@@ -315,10 +367,7 @@ const Home = () => {
     
         const subset = data.slice(yMin, yMax).map(row => row.slice(xMin, xMax));
 
-        var axisUnit = localStorage.getItem("axisUnit");
-        if (axisUnit == null) {
-            axisUnit = "Mb"
-        }
+        var axisUnit = "Mb";
 
         const bpPerUnit = dnaConversion.convert(1, axisUnit);
         const pointsPerUnit = +localStorage.getItem("pointsPerUnit");
@@ -335,47 +384,6 @@ const Home = () => {
         setHoverText(hoverText);
         return { viewXMin, xMin, viewXMax, xMax, viewYMin, yMin, viewYMax, yMax }
     };    
-
-    const generateTickValues = (maxValue, axis, minX, minY) => {
-        const tickVals = [];
-        const tickTexts = [];
-        var axisUnit = localStorage.getItem("axisUnit");
-        if (axisUnit == null) {
-            axisUnit = "Mb"
-        }
-        var bpPerAxis = +localStorage.getItem("bpPerAxis");
-        if (bpPerAxis == 0) {
-            bpPerAxis = 1
-        }
-        const bpPerUnit = dnaConversion.convert(1, axisUnit);
-        const pointsPerUnit = +localStorage.getItem("pointsPerUnit");
-
-        for (let i = 0; i <= maxValue; i += 1) {
-
-            if (axis === 'x') {
-                // Only label even ticks for x-axis
-                // basesPerUnit is the unit required to be coverted to. For example, bp to MB
-                // pointsPerUnit is the resolution.
-                const basesWithDeci = ((i + minX) * pointsPerUnit) / bpPerUnit
-                const bases = (basesWithDeci.toFixed(0));
-
-                if (isWholeNumberWithNoDecimal(bases) && (basesWithDeci % bpPerAxis == 0)) {
-                    tickVals.push(i);
-                    tickTexts.push(`${bases} ${axisUnit}`);
-                }
-            } else {
-                // Only label even ticks for y-axis
-                const basesWithDeci = ((i + minY) * pointsPerUnit) / bpPerUnit
-                const bases = (basesWithDeci.toFixed(0));
-
-                if (isWholeNumberWithNoDecimal(bases) && (basesWithDeci % bpPerAxis == 0)) {
-                    tickVals.push(i);
-                    tickTexts.push(`${bases} ${axisUnit}`);
-                }
-            }
-        }
-        return { tickVals, tickTexts };
-    };
 
     const setupHeatmapLayout = (resolutionUnit) => {
         const xTicks = generateTickValues(initialRangePoints, 'x', 0, 0);
@@ -396,8 +404,50 @@ const Home = () => {
         }));
     };
 
+    const generateTickValues = (maxValue, axis, minX, minY) => {
+        const tickVals = [];
+        const tickTexts = [];
+        var axisUnit = localStorage.getItem("axisUnit");
+        if (axisUnit == null) {
+            axisUnit = "Mb"
+        }
+        var bpPerAxis = +localStorage.getItem("bpPerAxis");
+        if (bpPerAxis == 0) {
+            bpPerAxis = 1
+        }
+        const bpPerUnit = dnaConversion.convert(1, axisUnit);
+        const pointsPerUnit = +localStorage.getItem("pointsPerUnit");
+    
+        for (let i = 0; i <= maxValue; i += 1) {
+    
+            if (axis === 'x') {
+                // Only label even ticks for x-axis
+                // basesPerUnit is the unit required to be coverted to. For example, bp to MB
+                // pointsPerUnit is the resolution.
+                const basesWithDeci = ((i + minX) * pointsPerUnit) / bpPerUnit
+                const bases = (basesWithDeci.toFixed(0));
+    
+                if (isWholeNumberWithNoDecimal(bases) && (basesWithDeci % bpPerAxis == 0)) {
+                    tickVals.push(i);
+                    tickTexts.push(`${bases} ${axisUnit}`);
+                }
+            } else {
+                // Only label even ticks for y-axis
+                const basesWithDeci = ((i + minY) * pointsPerUnit) / bpPerUnit
+                const bases = (basesWithDeci.toFixed(0));
+    
+                if (isWholeNumberWithNoDecimal(bases) && (basesWithDeci % bpPerAxis == 0)) {
+                    tickVals.push(i);
+                    tickTexts.push(`${bases} ${axisUnit}`);
+                }
+            }
+        }
+        return { tickVals, tickTexts };
+    };
+
     const xTicks = generateTickValues(initialRangePoints, 'x', 0, 0);
     const yTicks = generateTickValues(initialRangePoints, 'y', 0, 0);
+
     const [layout, setLayout] = useState({
         autosize: true,
         dragmode: 'pan',
@@ -407,14 +457,14 @@ const Home = () => {
             t: 120, // top margin
         },
         xaxis: {
-            range: [virutalXMin, initialZoom],
+            range: [0, initialZoom],
             tickvals: xTicks.tickVals,
             ticktext: xTicks.tickTexts,
             side: 'top',
             tickangle: 0
         },
         yaxis: {
-            range: [initialZoom, virutalYMin],
+            range: [initialZoom, 0],
             tickvals: yTicks.tickVals,
             ticktext: yTicks.tickTexts,
             side: 'left',
@@ -455,6 +505,7 @@ const Home = () => {
                     xAxis={xAxis}
                     yAxis={yAxis}
                 />
+                <RightSidebar/>
             </main>
             <LoadingModal open={isLoading} />
         </>
