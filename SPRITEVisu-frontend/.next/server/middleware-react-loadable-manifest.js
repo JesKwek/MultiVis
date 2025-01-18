@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST="{\"app/_views/heatmap.js -> react-plotly.js\":{\"id\":\"app/_views/heatmap.js -> react-plotly.js\",\"files\":[\"static/chunks/_app-pages-browser_node_modules_react-plotly_js_react-plotly_js.js\"]}}"

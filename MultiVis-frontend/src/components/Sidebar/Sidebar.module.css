@@ -1,0 +1,137 @@
+.btntext {
+    color: rgb(120, 115, 115);
+    font-family: 'Lato';
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btntext:hover {
+    color: rgb(43, 0, 255);
+}
+
+.customDrawer {
+    position: relative; /* or absolute */
+  }
+
+.dropdownContainer {
+    margin: 0px 16px;
+}
+
+.parameterSelections {
+    overflow-y: scroll;
+    overflow-x: none;
+    padding: 0px 16px;
+    height: 100%;
+}
+
+
+.title {
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Import Data Section */
+.importSecion {
+    margin-top: 24px;
+}
+
+.directoryContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.importDataDiv {
+    position: relative;
+    display: inline-block;
+    background-color: rgb(246, 248, 249);
+    border: 1px solid rgb(227, 231, 233);
+    padding: 8px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    cursor: pointer;
+    width: 250px;
+}
+
+.fileInput {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.customFileInput{
+    font-family: 'OpenSans';
+    font-size: 12px;
+    font-weight: lighter;
+    color: gray;
+    cursor: pointer !important;
+}
+
+/* Data Properties */
+.dataPropertiesContainer {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+}
+
+.dataResolution {
+    display: flex;
+    gap: 8px
+}
+
+.chrSelectionDiv {
+    display: flex;
+    gap: 8px;
+    margin-right: 10px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.downweightingDiv {
+    margin-top: 8px;
+}
+
+/* Heatmap */
+.heatmapPropertiesContainer {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+}
+
+.heatmapValueDiv {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Apply Button Section */
+.applyDiv {
+    padding: 16px;
+}
+
+.subtitle {
+    color: rgb(85, 85, 85);
+    font-weight: bold;
+    font-size: 12px;
+    margin: -6px 0 0 0;
+}
+
+.description {
+    font-size: 10px;
+    margin: 4px 0 0px 0;
+    color: rgb(85, 85, 85);
+    font-weight: lighter;
+}
+
+.spaces {
+    height: 80px;
+    width: 100%;
+}
+

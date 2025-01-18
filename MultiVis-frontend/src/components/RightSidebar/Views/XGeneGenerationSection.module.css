@@ -1,0 +1,47 @@
+.outer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.content {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.multiplesFields {
+    display: flex;
+    gap: 8px
+}
+
+.label {
+    font-size: 12px !important;
+}
+
+.geneInfos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto; /* Use auto for scrollbars only when needed */
+    max-height: 100%; /* Define a max height (adjust as needed) */
+    padding-bottom: 100px;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.noGenesMessage {
+    color: gray;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.note {
+    font-size: 10px;
+    color: gray;
+}

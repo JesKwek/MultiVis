@@ -1,0 +1,10 @@
+.content {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.label {
+    font-size: 12px;
+}

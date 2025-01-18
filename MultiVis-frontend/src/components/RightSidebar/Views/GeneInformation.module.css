@@ -1,0 +1,36 @@
+.card {
+    padding: 12px 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.card p{
+    padding: 0;
+    margin: 0;
+}
+
+.description {
+    font-size: 12px;
+    margin-top: 8px !important;
+    color: #494949;
+}
+
+.loc {
+    font-size: 12px;
+    color: #494949;
+}
+
+.name {
+    font-size: 14px;
+    color: rgb(36, 36, 36);
+}
+
+.detail {
+    font-size: 12px;
+    color: #5f5f5f;
+}
+
+.detail span {
+    font-family: 'Lato';
+    font-weight: bold;
+}

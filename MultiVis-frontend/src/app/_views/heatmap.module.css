@@ -1,0 +1,60 @@
+.chromXDiv p {
+    display: inline-block;
+    margin: 0;
+    padding-top: 10px;
+    z-index: 90;
+}
+
+.chromXDiv {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    position: absolute;
+    background-color: rgb(207, 216, 221);
+    height: 42px;
+    width: 696px;
+    z-index: 50;
+    top: 42px;
+    left: 480px;
+    border-radius: 400px;
+    overflow: hidden;
+}
+
+.xSlider {
+    position: absolute;
+    background-color: rgb(76, 192, 255);
+    height: 100%;
+    z-index: 80;
+}
+
+.chromYDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: rgb(207, 216, 221);
+    height: 696px;
+    width: 42px;
+    z-index: 50;
+    top: 128px;
+    left: 350px;
+    border-radius: 400px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.ySlider {
+    position: absolute;
+    background-color: rgb(76, 192, 255);
+    width: 100%;
+}
+
+.chromYDiv p {
+    padding: 0;
+    height: 24px;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -3,16 +3,16 @@
 # Change to the directory where the script is located
 cd "$(dirname "$0")"
 
-# Navigate to the SPRITEVisu-frontend directory and start the npm dev server
-echo "Starting npm dev server in SPRITEVisu-frontend..."
-cd SPRITEVisu-frontend
+# Navigate to the MultiVis-frontend directory and start the npm dev server
+echo "Starting npm dev server in MultiVis-frontend..."
+cd MultiVis-frontend
 npm run dev &  # Run npm start dev in the background
 NPM_PID=$!
 cd ..
 
-# Navigate to the SPRITEVisu-server directory and start the Python server
-echo "Starting Python server in SPRITEVisu-server..."
-cd SPRITEVisu-server
+# Navigate to the MultiVis-server directory and start the Python server
+echo "Starting Python server in MultiVis-server..."
+cd MultiVis-server
 python3 main.py &  # Run the Python server in the background
 PYTHON_PID=$!
 cd ..

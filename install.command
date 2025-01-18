@@ -32,10 +32,10 @@ if ! command_exists node || ! command_exists npm; then
     exit 1
 fi
 
-# Navigate to the SPRITEVisu-frontend directory and run npm install
-echo "Navigating to SPRITEVisu-frontend directory..."
-cd SPRITEVisu-frontend
-echo "Running npm install in SPRITEVisu-frontend..."
+# Navigate to the MultiVis-frontend directory and run npm install
+echo "Navigating to MultiVis-frontend directory..."
+cd MultiVis-frontend
+echo "Running npm install in MultiVis-frontend..."
 npm install
 cd ..
 
