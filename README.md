@@ -1,15 +1,13 @@
 <h1 align="center">
   <a href="https://github.com/JesKwek/SPRITEVisu/tree/main">
-    <img src="SPRITEVisu-frontend/src/app/favicon.ico" alt="Logo" width="25" height="25">
-    <b>SPRITEVisu</b>
+    <img src="MultiVis-frontend/src/app/favicon.ico" alt="Logo" width="25" height="25">
+    <b>MultiVis</b>
   </a>
   
 </h1>
 
+
 <div align="center">
-  Coming Soon
-  <br />
-  <br />
   <a href="https://github.com/JesKwek/SPRITEVisu/issues">Report a Bug</a>
   ·
   <a href="https://github.com/JesKwek/SPRITEVisu/issues">Request a Feature</a>
@@ -19,11 +17,14 @@
 
 <br />
 
-## SPRITEVisu Installation Guide
+
+[![MultiVis Full Tutorial video](https://img.youtube.com/vi/a5YBAw0kY04/0.jpg)](https://www.youtube.com/watch?v=a5YBAw0kY04)
+
+## MultiVis Installation Guide
 <details>
   <summary><strong>Method 1: Scripted Installation (Quick and Easy)</strong></summary>
 
-This guide provides step-by-step instructions for setting up the SPRITEVisu web software on your local machine.
+This guide provides step-by-step instructions for setting up the MultiVis web software on your local machine.
 
 ### Prerequisites
 
@@ -34,10 +35,10 @@ Before you start, ensure that you have the following installed:
 
 ### Step 1: Clone or download the Repository
 
-First, clone the SPRITEVisu repository to your local machine or download it via here [SPRITEVisu.zip](https://github.com/JesKwek/SPRITEVisu/archive/refs/heads/main.zip):
+First, clone the MultiVis repository to your local machine or download it via here [MultiVis.zip](https://github.com/JesKwek/MultiVis/archive/refs/heads/main.zip):
 
 ```bash
-git clone https://github.com/JesKwek/SPRITEVisu.git
+git clone https://github.com/JesKwek/MultiVis.git
 ```
 
 ### Step 2: Install Dependencies
@@ -70,7 +71,7 @@ http://localhost:3000
 <details>
   <summary><strong>Method 2: Manual Installation</strong></summary>
 
-This guide provides step-by-step instructions for manually setting up the SPRITEVisu web software on your local machine.
+This guide provides step-by-step instructions for manually setting up the MultiVis web software on your local machine.
 
 ### Prerequisites
 
@@ -81,24 +82,24 @@ Before you start, ensure that you have the following installed:
 
 ### Step 1: Clone the Repository
 
-First, clone the SPRITEVisu repository to your local machine or download it via here [SPRITEVisu.zip](https://github.com/JesKwek/SPRITEVisu/archive/refs/heads/main.zip):
+First, clone the SPRITEVisu repository to your local machine or download it via here [MultiVis.zip](https://github.com/JesKwek/MultiVis/archive/refs/heads/main.zip):
 
 ```bash
-git clone https://github.com/JesKwek/SPRITEVisu.git
+git clone https://github.com/JesKwek/MultiVis.git
 ```
 
 ### Step 2: Install Frontend Dependencies
 
-Navigate to the frontend directory `SPRITEVisu-frontend` and install the required Node.js packages: 
+Navigate to the frontend directory `MultiVis-frontend` and install the required Node.js packages: 
 
 ```bash
-cd SPRITEVisu-frontend
+cd MultiVis-frontend
 npm install
 ```
 
 ### Step 3: Install Backend Dependencies
 
-Next, navigate to the backend directory `SPRITEVisu-server` and install the required Python packages:
+Next, navigate to the backend directory `MultiVis-server` and install the required Python packages:
 
 ```
 cd ..
@@ -109,7 +110,7 @@ pip install -r requirements.txt
 Go back to the frontend directory and start the Next.js development server:
 
 ```
-cd ../SPRITEVisu-server
+cd ../MultiVis-server
 npm run dev
 ```
 
@@ -120,7 +121,7 @@ The frontend server should now be running at http://localhost:3000.
 In a new terminal window, navigate to the backend directory and start the Flask server:
 
 ```
-cd SPRITEVisu-server
+cd MultiVis-server
 python main.py
 ```
 
