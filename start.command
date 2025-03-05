@@ -12,9 +12,7 @@ cd ..
 
 # Start the Python server in a new macOS Terminal window
 echo "Starting Python server in MultiVis-server..."
-osascript -e 'tell application "Terminal"
-    do script "cd \"'$(pwd)'/MultiVis-server\" && python3 main.py"
-end tell'
+osascript -e "tell application \"Terminal\" to do script \"cd '$(pwd)/MultiVis-server' && python3 main.py\""
 
 echo "All servers are up and running."
 echo "To stop them, use: kill $NPM_PID"

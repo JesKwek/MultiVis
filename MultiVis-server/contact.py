@@ -254,7 +254,8 @@ class Contacts:
 
     def get_hicorrector_path(self):
         """
-        Determines the path to the Hi-Corrector executable based on the operating system.
+        Determines the path to the Hi-Corrector executable based on the operating system
+        and CPU architecture.
 
         Returns:
             str: Path to the Hi-Corrector executable.
@@ -262,7 +263,10 @@ class Contacts:
         current_os = platform.system()
 
         if current_os == "Darwin":  # macOS
-            hicorrector = './HiCorrector_1.2/bin-macOS/ic'
+            if platform.machine() == "arm64":
+                hicorrector = './HiCorrector_1.2/bin-macOS/ic'  # Apple Silicon (M1/M2/M3)
+            else:
+                hicorrector = './HiCorrector_1.2/bin-macOS-Intel/ic'  # Intel macOS
         elif current_os == "Windows":
             hicorrector = './HiCorrector_1.2/bin-Windows/ic'
         elif current_os == "Linux":

@@ -4,9 +4,9 @@ CFLAGS= -Wall -O3
 LIBS= -lm
 
 # mpi compiler and options for ANSI C and mpi library
-CCMPI=/opt/homebrew/opt/open-mpi/bin/mpicc
+CCMPI=mpicc
 CFLAGSMPI=
-LIBSMPI=-L/opt/homebrew/opt/open-mpi/lib
+LIBSMPI= -L/usr/usc/openmpi/1.6.4/lib
 INCLUDE= 
 
 # getopt functions library

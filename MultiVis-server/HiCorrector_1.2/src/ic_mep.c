@@ -7,7 +7,7 @@
 
  *      Author: Wenyuan Li
  */
-
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,7 +73,7 @@ void print_usage(FILE* stream)
 	fprintf(stream, "Author: Wenyuan Li\n");
 	fprintf(stream, "Date: October 17, 2014\n");
 	fprintf( stream, "Please email XJZHOU@usc.edu or WEL@usc.edu\n");
-	fprintf( stream, "Further refers to http:\/\/zhoulab.usc.edu for help.\n\n");
+	fprintf( stream, "Further refers to http://zhoulab.usc.edu for help.\n\n");
 }
 
 int main(int argc, char ** argv) {

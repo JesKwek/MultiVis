@@ -4,7 +4,7 @@
  *  Created on: August 14, 2014
  *      Author: Wenyuan Li
  */
-
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
