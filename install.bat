@@ -36,7 +36,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 REM Navigate to the sprite-box directory and run npm install
 echo Navigating to sprite-box directory...
-cd sprite-box
+cd MultiVis-frontend
 echo Running npm install in sprite-box...
 npm install
 

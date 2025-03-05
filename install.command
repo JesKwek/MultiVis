@@ -13,18 +13,22 @@ if ! command_exists python3; then
     exit 1
 fi
 
-# Check if pip is installed
-if ! command_exists pip3; then
+# Check if pip3 or pip is installed, and use the available one
+if command_exists pip3; then
+    PIP_CMD="pip3"
+elif command_exists pip; then
+    PIP_CMD="pip"
+else
     echo "pip is not installed. Installing pip..."
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     python3 get-pip.py
     rm get-pip.py
+    PIP_CMD="pip3"  # Assume pip3 was installed
 fi
 
 # Install required packages
-echo "Installing required packages from requirements.txt..."
-pip install -r ./requirements.txt
-
+echo "Installing required packages from requirements.txt using $PIP_CMD..."
+$PIP_CMD install -r ./requirements.txt
 
 # Check if Node.js and npm are installed
 if ! command_exists node || ! command_exists npm; then

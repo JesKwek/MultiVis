@@ -8,13 +8,13 @@ cd /d "%SCRIPT_DIR%"
 
 REM Navigate to the sprite-box directory and start the npm dev server
 echo Starting npm dev server in sprite-box...
-cd sprite-box
-start cmd /c "npm run dev"  REM Run npm start dev in a new command prompt window
+cd MultiVis-frontend
+start cmd /c "npm run dev"
 cd ..
 
 REM Navigate to the sprite-box-server directory and start the Python server
 echo Starting Python server in sprite-box-server...
-cd sprite-box-server
+cd MultiVis-server
 start cmd /c "python main.py"  REM Run the Python server in a new command prompt window
 cd ..
 

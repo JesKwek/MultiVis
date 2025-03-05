@@ -10,15 +10,14 @@ npm run dev &  # Run npm start dev in the background
 NPM_PID=$!
 cd ..
 
-# Navigate to the MultiVis-server directory and start the Python server
+# Start the Python server in a new macOS Terminal window
 echo "Starting Python server in MultiVis-server..."
-cd MultiVis-server
-python3 main.py &  # Run the Python server in the background
-PYTHON_PID=$!
-cd ..
+osascript -e 'tell application "Terminal"
+    do script "cd \"'$(pwd)'/MultiVis-server\" && python3 main.py"
+end tell'
 
 echo "All servers are up and running."
-echo "To stop them, use: kill $NPM_PID $PYTHON_PID"
+echo "To stop them, use: kill $NPM_PID"
 
 # Wait indefinitely to keep the script running
-wait $NPM_PID $PYTHON_PID
+wait $NPM_PID
